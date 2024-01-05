@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+
+  testcontainers-db:
+    image: postgres:13-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=123ewqasd
+      - POSTGRES_USER=test
+      - POSTGRES_DB=testcontainers
+    ports:
+      - "5432:5432"
+
+  rabbit-mq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  account-service:
+    image: test-containers-account:1.0.6-SNAPSHOT
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbit-mq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://testcontainers-db:5432/testcontainers
+    ports:
+      - "9011:9011"
+    depends_on:
+      - rabbit-mq
+      - testcontainers-db
+
+volumes:
+  pg_data:

@@ -1,0 +1,57 @@
+
+# @name Post new user
+POST {{host}}/api/user/create
+Content-Type: application/json
+
+{
+  "name": "John",
+  "surname": "Doe",
+  "birthday": "2023-12-15T16:22:52.950+01:00",
+  "account": null
+
+}
+
+
+> {%
+
+    client.global.set("userID", response.body.id);
+
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function() {
+        let type = response.contentType.mimeType;
+        client.assert(type === "application/json", "Expected 'application/json but received '" + type + "'");
+    });
+
+    client.test("Response contain object", function() {
+        let id = response.body.id;
+        client.assert(id > 0, "Response should contain object with id > 0 but received id =" + id);
+    });
+
+%}
+
+###
+
+# @name Get user with account
+GET {{host}}/api/user/{{userID}}
+
+> {%
+
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function() {
+        let type = response.contentType.mimeType;
+        client.assert(type === "application/json", "Expected 'application/json but received '" + type + "'");
+    });
+
+    client.test("Response contain object", function() {
+        let id = response.body.id;
+        client.assert(id > 0, "Response should contain object with id > 0 but received id =" + id);
+    });
+
+%}
+

@@ -1,0 +1,26 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: user-registration-service
+  datasource:
+    url: jdbc:postgresql://localhost/testcontainers
+    username: test
+    password: 123ewqasd
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
